@@ -1,0 +1,21 @@
+node_modules/
+dist/
+coverage/
+.DS_Store
+*.log
+
+# Environment files
+.env
+backend/.env
+frontend/.env
+
+# Dependencies and build artifacts
+backend/node_modules/
+backend/dist/
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.idea/
+.vscode/*
+!.vscode/extensions.json

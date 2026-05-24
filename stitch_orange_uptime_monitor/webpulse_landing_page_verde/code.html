@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>WebPulse | Precision Monitoring</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #131315;
+            color: #e5e1e4;
+        }
+    </style>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-container-lowest": "#0e0e10",
+                "primary": "#4edea3",
+                "error": "#ffb4ab",
+                "background": "#131315",
+                "on-primary": "#003824",
+                "surface-tint": "#4edea3",
+                "on-surface": "#e5e1e4",
+                "primary-container": "#10b981",
+                "on-surface-variant": "#bbcabf",
+                "error-container": "#93000a",
+                "on-error-container": "#ffdad6",
+                "on-secondary-fixed": "#1b1b21",
+                "outline-variant": "#3c4a42",
+                "surface-container-high": "#2a2a2c",
+                "outline": "#86948a",
+                "tertiary-fixed": "#b0f0d6",
+                "tertiary-container": "#71af97",
+                "surface": "#131315",
+                "on-tertiary-container": "#004231",
+                "tertiary-fixed-dim": "#95d3ba",
+                "secondary-fixed-dim": "#c7c5ce",
+                "inverse-on-surface": "#313032",
+                "inverse-primary": "#006c49",
+                "secondary-container": "#4b4b52",
+                "on-primary-container": "#00422b",
+                "surface-dim": "#131315",
+                "on-background": "#e5e1e4",
+                "surface-variant": "#353437",
+                "on-secondary-container": "#bcbbc3",
+                "surface-bright": "#39393b",
+                "on-error": "#690005",
+                "on-tertiary-fixed-variant": "#0b513d",
+                "on-secondary": "#303037",
+                "on-primary-fixed": "#002113",
+                "secondary-fixed": "#e3e1ea",
+                "inverse-surface": "#e5e1e4",
+                "tertiary": "#95d3ba",
+                "primary-fixed-dim": "#4edea3",
+                "primary-fixed": "#6ffbbe",
+                "on-tertiary-fixed": "#002117",
+                "surface-container-low": "#1c1b1d",
+                "surface-container-highest": "#353437",
+                "on-primary-fixed-variant": "#005236",
+                "on-tertiary": "#003829",
+                "on-secondary-fixed-variant": "#46464d",
+                "surface-container": "#201f22",
+                "secondary": "#c7c5ce"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+                "md": "16px",
+                "margin": "24px",
+                "sm": "8px",
+                "lg": "24px",
+                "xs": "4px",
+                "base": "4px",
+                "gutter": "16px",
+                "xl": "48px"
+        },
+        "fontFamily": {
+                "body-lg": [
+                        "Geist"
+                ],
+                "headline-md": [
+                        "Geist"
+                ],
+                "body-md": [
+                        "Geist"
+                ],
+                "headline-lg": [
+                        "Geist"
+                ],
+                "headline-lg-mobile": [
+                        "Geist"
+                ],
+                "label-mono": [
+                        "JetBrains Mono"
+                ]
+        },
+        "fontSize": {
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "1.6",
+                                "letterSpacing": "0",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "1.3",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "1.5",
+                                "letterSpacing": "0",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "24px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-mono": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "500"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+</head>
+<body class="font-body-md text-on-surface bg-background min-h-screen flex flex-col selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar Shell -->
+<header class="bg-background dark:bg-background border-b border-outline-variant docked full-width top-0 z-50 sticky">
+<nav class="flex justify-between items-center w-full px-6 py-4 max-w-7xl mx-auto">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black tracking-tighter text-primary uppercase font-headline-md">WebPulse</span>
+<div class="hidden md:flex items-center gap-6">
+<a class="text-primary border-b-2 border-primary pb-1 font-body-md tracking-tight font-medium" href="#">Solutions</a>
+<a class="text-gray-400 hover:text-gray-100 transition-colors font-body-md tracking-tight font-medium" href="#">Features</a>
+<a class="text-gray-400 hover:text-gray-100 transition-colors font-body-md tracking-tight font-medium" href="#">Pricing</a>
+<a class="text-gray-400 hover:text-gray-100 transition-colors font-body-md tracking-tight font-medium" href="#">Docs</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-gray-400 hover:text-gray-100 transition-colors font-body-md tracking-tight font-medium text-sm">Login</button>
+<button class="bg-primary-container text-on-primary-container font-body-md tracking-tight font-medium px-4 py-2 rounded-lg hover:opacity-90 active:scale-95 transition-all">Get Started</button>
+</div>
+</nav>
+</header>
+<main class="flex-grow">
+<!-- Hero Section -->
+<section class="relative pt-24 pb-16 px-margin max-w-7xl mx-auto overflow-hidden">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+<div class="lg:col-span-6 z-10">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-surface-container-high rounded-full border border-outline-variant mb-6">
+<span class="w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_#40e56c]"></span>
+<span class="font-label-mono text-on-surface-variant uppercase">All systems operational</span>
+</div>
+<h1 class="font-headline-lg text-[48px] md:text-[64px] leading-tight mb-6">
+                        Your uptime is <br/>
+<span class="text-primary">our mission.</span>
+</h1>
+<p class="font-body-lg text-on-surface-variant mb-10 max-w-lg">
+                        Real-time monitoring for modern web apps. Detect anomalies before they impact users with precision data tracking and sub-second alerting.
+                    </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary-container text-on-primary-container px-8 py-4 rounded-xl font-headline-md hover:opacity-90 transition-all flex items-center gap-2 group">
+                            Start Free Trial
+                            <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<button class="bg-surface-container-highest border border-outline-variant text-on-surface px-8 py-4 rounded-xl font-headline-md hover:border-primary/30 transition-all">
+                            View Demo
+                        </button>
+</div>
+<!-- Social Proof -->
+<div class="mt-12 pt-8 border-t border-outline-variant">
+<p class="font-label-mono text-on-surface-variant mb-4 uppercase tracking-widest">Trusted by 5,000+ developers</p>
+<div class="flex flex-wrap gap-8 opacity-50 grayscale hover:grayscale-0 transition-all">
+<span class="font-headline-md text-on-surface">VECTRA</span>
+<span class="font-headline-md text-on-surface">QUANTUM</span>
+<span class="font-headline-md text-on-surface">NEXUS</span>
+<span class="font-headline-md text-on-surface">APEX</span>
+</div>
+</div>
+</div>
+<div class="lg:col-span-6 relative">
+<div class="relative rounded-xl border border-outline-variant bg-surface-container shadow-2xl overflow-hidden p-xs">
+<img alt="WebPulse Dashboard Mockup" class="rounded-lg border border-outline-variant" data-alt="Modern dark mode software dashboard interface with vibrant orange uptime graphs, server health charts, and real-time logs display on deep charcoal panels" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBT-Hzd4yWRoty3O1m9XAGasIedYtVVrtbmHIEL2vP3slLsDydAKekT2bg88nI_vu3C3b7LWISSwkFslHqO6ZxrLpMAKSSsQffNSkBVx8Nef9mt_-q4_ZuunXpLtXBWDp6IFy9s7t1nM1JV15pLKQnFR-rJorwxw4xwKC_9T3yAQN3gxbfmkXyVT68hO_4IRSvt3z6CRi_tQNi3I2jvGTKupqP6B62618AKL_5aYRcqO88ekRgJRE0CieukeyncJVNwe0laSr6eKHz"/>
+</div>
+<!-- Decorative Element -->
+<div class="absolute -top-4 -right-4 w-64 h-64 bg-primary/10 rounded-full blur-3xl -z-10"></div>
+<div class="absolute -bottom-8 -left-8 w-64 h-64 bg-secondary/5 rounded-full blur-3xl -z-10"></div>
+</div>
+</div>
+</section>
+<!-- Features Bento Grid -->
+<section class="py-xl px-margin max-w-7xl mx-auto">
+<div class="text-center mb-xl">
+<h2 class="font-headline-lg text-on-surface mb-4">Engineered for Reliability</h2>
+<p class="font-body-lg text-on-surface-variant max-w-2xl mx-auto">Precision tools to maintain your application's health across every layer of the stack.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Large Feature -->
+<div class="md:col-span-8 bg-surface-container border border-outline-variant rounded-xl p-lg hover:border-primary/30 transition-all group overflow-hidden relative">
+<div class="flex flex-col h-full">
+<span class="material-symbols-outlined text-primary text-3xl mb-4">query_stats</span>
+<h3 class="font-headline-md mb-2">Real-time status</h3>
+<p class="font-body-md text-on-surface-variant mb-8 max-w-md">Monitor global latency and uptime from 45+ locations worldwide with sub-second resolution.</p>
+<div class="mt-auto bg-background rounded border border-outline-variant p-4">
+<div class="flex justify-between items-end gap-1 h-24">
+<div class="bg-secondary-container/20 w-full h-1/2 rounded-t-sm"></div>
+<div class="bg-secondary-container/20 w-full h-2/3 rounded-t-sm"></div>
+<div class="bg-secondary-container/40 w-full h-3/4 rounded-t-sm"></div>
+<div class="bg-secondary-container/60 w-full h-full rounded-t-sm animate-pulse"></div>
+<div class="bg-secondary-container/40 w-full h-4/5 rounded-t-sm"></div>
+<div class="bg-secondary-container/20 w-full h-1/2 rounded-t-sm"></div>
+<div class="bg-error/30 w-full h-1/5 rounded-t-sm"></div>
+<div class="bg-secondary-container/20 w-full h-2/3 rounded-t-sm"></div>
+<div class="bg-secondary-container/40 w-full h-3/4 rounded-t-sm"></div>
+</div>
+<div class="flex justify-between mt-2 font-label-mono text-on-surface-variant">
+<span>24h ago</span>
+<span>Current</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Small Feature 1 -->
+<div class="md:col-span-4 bg-surface-container border border-outline-variant rounded-xl p-lg hover:border-primary/30 transition-all">
+<span class="material-symbols-outlined text-primary text-3xl mb-4">notifications_active</span>
+<h3 class="font-headline-md mb-2">Instant SMS/Email alerts</h3>
+<p class="font-body-md text-on-surface-variant">Configure custom escalation policies so the right person gets notified the moment a metric slips.</p>
+<div class="mt-8 flex flex-col gap-2">
+<div class="flex items-center gap-3 p-3 bg-background border border-outline-variant rounded">
+<span class="material-symbols-outlined text-secondary text-sm">check_circle</span>
+<span class="font-label-mono text-xs">Email sent to dev-team@...</span>
+</div>
+<div class="flex items-center gap-3 p-3 bg-background border border-outline-variant rounded">
+<span class="material-symbols-outlined text-secondary text-sm">check_circle</span>
+<span class="font-label-mono text-xs">SMS triggered to +1 888...</span>
+</div>
+</div>
+</div>
+<!-- Small Feature 2 -->
+<div class="md:col-span-4 bg-surface-container border border-outline-variant rounded-xl p-lg hover:border-primary/30 transition-all">
+<span class="material-symbols-outlined text-primary text-3xl mb-4">monitoring</span>
+<h3 class="font-headline-md mb-2">Performance metrics</h3>
+<p class="font-body-md text-on-surface-variant">Deep-dive into Web Vitals, API response times, and server-side resource utilization.</p>
+</div>
+<!-- Medium Feature -->
+<div class="md:col-span-8 bg-surface-container border border-outline-variant rounded-xl p-lg hover:border-primary/30 transition-all overflow-hidden">
+<div class="flex flex-col md:flex-row gap-8 items-center">
+<div class="flex-1">
+<span class="material-symbols-outlined text-primary text-3xl mb-4">history</span>
+<h3 class="font-headline-md mb-2">Incident logs</h3>
+<p class="font-body-md text-on-surface-variant">Automatically correlate downtime with deployment logs and code changes for faster RCA.</p>
+</div>
+<div class="flex-1 w-full font-label-mono text-[11px] bg-black p-4 rounded border border-outline-variant text-on-surface-variant">
+<div class="mb-1 text-secondary opacity-80">[2024-05-21 14:02:01] INFO: Health check pass</div>
+<div class="mb-1 text-secondary opacity-80">[2024-05-21 14:03:01] INFO: Health check pass</div>
+<div class="mb-1 text-error">[2024-05-21 14:04:02] CRIT: Timeout on /api/v1/auth</div>
+<div class="mb-1 text-error">[2024-05-21 14:04:03] CRIT: DB pool exhausted</div>
+<div class="mb-1 text-primary">[2024-05-21 14:04:05] WARN: Alert triggered (SMS)</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing Section -->
+<section class="py-xl px-margin max-w-7xl mx-auto bg-surface-container-lowest/50 rounded-3xl mb-xl border border-outline-variant">
+<div class="text-center mb-xl">
+<h2 class="font-headline-lg text-on-surface mb-4">Transparent Pricing</h2>
+<p class="font-body-lg text-on-surface-variant">Scalable plans for side projects to global enterprises.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 px-6">
+<!-- Free Plan -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-lg flex flex-col h-full">
+<h3 class="font-label-mono text-on-surface-variant uppercase mb-2">Free</h3>
+<div class="flex items-baseline gap-1 mb-6">
+<span class="font-headline-lg text-4xl">$0</span>
+<span class="text-on-surface-variant">/mo</span>
+</div>
+<ul class="space-y-4 mb-8 flex-grow">
+<li class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">check</span>
+                            5 Monitors
+                        </li>
+<li class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">check</span>
+                            5-minute interval
+                        </li>
+<li class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">check</span>
+                            Email notifications
+                        </li>
+</ul>
+<button class="w-full py-3 rounded border border-outline-variant hover:border-primary/30 transition-all font-body-md font-medium">Get Started</button>
+</div>
+<!-- Pro Plan -->
+<div class="bg-surface-container border-2 border-primary rounded-xl p-lg flex flex-col h-full relative transform md:-translate-y-4">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-on-primary px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest">Recommended</div>
+<h3 class="font-label-mono text-primary uppercase mb-2">Pro</h3>
+<div class="flex items-baseline gap-1 mb-6">
+<span class="font-headline-lg text-4xl">$29</span>
+<span class="text-on-surface-variant">/mo</span>
+</div>
+<ul class="space-y-4 mb-8 flex-grow">
+<li class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">check</span>
+                            50 Monitors
+                        </li>
+<li class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">check</span>
+                            30-second interval
+                        </li>
+<li class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">check</span>
+                            SMS &amp; Slack Integration
+                        </li>
+<li class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">check</span>
+                            Custom Status Page
+                        </li>
+</ul>
+<button class="w-full py-3 rounded bg-primary text-on-primary hover:opacity-90 transition-all font-body-md font-medium">Start 14-day Free Trial</button>
+</div>
+<!-- Enterprise Plan -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-lg flex flex-col h-full">
+<h3 class="font-label-mono text-on-surface-variant uppercase mb-2">Enterprise</h3>
+<div class="flex items-baseline gap-1 mb-6">
+<span class="font-headline-lg text-4xl">Custom</span>
+</div>
+<ul class="space-y-4 mb-8 flex-grow">
+<li class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">check</span>
+                            Unlimited Monitors
+                        </li>
+<li class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">check</span>
+                            1-second interval
+                        </li>
+<li class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">check</span>
+                            24/7 Dedicated Support
+                        </li>
+<li class="flex items-center gap-2 text-sm">
+<span class="material-symbols-outlined text-secondary text-[18px]">check</span>
+                            On-premise deployment
+                        </li>
+</ul>
+<button class="w-full py-3 rounded border border-outline-variant hover:border-primary/30 transition-all font-body-md font-medium">Contact Sales</button>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-xl px-margin text-center">
+<h2 class="font-headline-lg mb-8">Ready to pulse check your stack?</h2>
+<button class="bg-primary-container text-on-primary-container px-12 py-5 rounded-xl font-headline-md hover:opacity-95 active:scale-95 transition-all">Start Free Trial</button>
+<p class="mt-4 text-on-surface-variant font-label-mono uppercase tracking-tighter">No credit card required • Instant setup</p>
+</section>
+</main>
+<!-- Footer Shell -->
+<footer class="bg-background dark:bg-background border-t border-outline-variant mt-auto">
+<div class="flex flex-col md:flex-row justify-between items-center w-full px-6 py-8 max-w-7xl mx-auto gap-4">
+<div class="flex flex-col items-center md:items-start gap-2">
+<span class="text-lg font-bold text-primary font-headline-md">WebPulse</span>
+<p class="font-body-md text-sm uppercase tracking-widest text-gray-500 text-center md:text-left">© 2024 WebPulse. Precision monitoring for high-performance environments.</p>
+</div>
+<div class="flex gap-6">
+<a class="font-body-md text-sm uppercase tracking-widest text-gray-500 hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="font-body-md text-sm uppercase tracking-widest text-gray-500 hover:text-primary transition-colors" href="#">Terms</a>
+<a class="font-body-md text-sm uppercase tracking-widest text-gray-500 hover:text-primary transition-colors" href="#">Status</a>
+<a class="font-body-md text-sm uppercase tracking-widest text-gray-500 hover:text-primary transition-colors" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>

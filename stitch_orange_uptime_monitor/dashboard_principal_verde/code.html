@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-container-lowest": "#0e0e10",
+                "primary": "#4edea3",
+                "error": "#ffb4ab",
+                "background": "#131315",
+                "on-primary": "#003824",
+                "surface-tint": "#4edea3",
+                "on-surface": "#e5e1e4",
+                "primary-container": "#10b981",
+                "on-surface-variant": "#bbcabf",
+                "error-container": "#93000a",
+                "on-error-container": "#ffdad6",
+                "on-secondary-fixed": "#1b1b21",
+                "outline-variant": "#3c4a42",
+                "surface-container-high": "#2a2a2c",
+                "outline": "#86948a",
+                "tertiary-fixed": "#b0f0d6",
+                "tertiary-container": "#71af97",
+                "surface": "#131315",
+                "on-tertiary-container": "#004231",
+                "tertiary-fixed-dim": "#95d3ba",
+                "secondary-fixed-dim": "#c7c5ce",
+                "inverse-on-surface": "#313032",
+                "inverse-primary": "#006c49",
+                "secondary-container": "#4b4b52",
+                "on-primary-container": "#00422b",
+                "surface-dim": "#131315",
+                "on-background": "#e5e1e4",
+                "surface-variant": "#353437",
+                "on-secondary-container": "#bcbbc3",
+                "surface-bright": "#39393b",
+                "on-error": "#690005",
+                "on-tertiary-fixed-variant": "#0b513d",
+                "on-secondary": "#303037",
+                "on-primary-fixed": "#002113",
+                "secondary-fixed": "#e3e1ea",
+                "inverse-surface": "#e5e1e4",
+                "tertiary": "#95d3ba",
+                "primary-fixed-dim": "#4edea3",
+                "primary-fixed": "#6ffbbe",
+                "on-tertiary-fixed": "#002117",
+                "surface-container-low": "#1c1b1d",
+                "surface-container-highest": "#353437",
+                "on-primary-fixed-variant": "#005236",
+                "on-tertiary": "#003829",
+                "on-secondary-fixed-variant": "#46464d",
+                "surface-container": "#201f22",
+                "secondary": "#c7c5ce"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+        },
+        "spacing": {
+                "md": "16px",
+                "margin": "24px",
+                "sm": "8px",
+                "lg": "24px",
+                "xs": "4px",
+                "base": "4px",
+                "gutter": "16px",
+                "xl": "48px"
+        },
+        "fontFamily": {
+                "body-lg": [
+                        "Geist"
+                ],
+                "headline-md": [
+                        "Geist"
+                ],
+                "body-md": [
+                        "Geist"
+                ],
+                "headline-lg": [
+                        "Geist"
+                ],
+                "headline-lg-mobile": [
+                        "Geist"
+                ],
+                "label-mono": [
+                        "JetBrains Mono"
+                ],
+                "sans": ["Geist"]
+        },
+        "fontSize": {
+                "body-lg": [
+                        "16px",
+                        {
+                                "lineHeight": "1.6",
+                                "letterSpacing": "0",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "1.3",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-md": [
+                        "14px",
+                        {
+                                "lineHeight": "1.5",
+                                "letterSpacing": "0",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-lg": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-lg-mobile": [
+                        "24px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-mono": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "500"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .status-pulse-green {
+            box-shadow: 0 0 8px #40e56c;
+        }
+        .status-pulse-red {
+            box-shadow: 0 0 8px #ffb4ab;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-sans antialiased">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-outline-variant bg-surface-container-lowest flex flex-col py-8 z-50">
+<div class="px-6 mb-10">
+<h1 class="text-xl font-black text-emerald-500 uppercase tracking-widest">WebPulse</h1>
+<p class="font-sans antialiased tracking-tight text-sm text-on-surface-variant">Monitoring Engine</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Active Tab: Dashboard -->
+<a class="flex items-center gap-3 px-4 py-3 bg-emerald-500/10 text-emerald-500 border-r-2 border-emerald-500 font-semibold transform transition-transform active:scale-98" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-sans antialiased tracking-tight text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-white transition-colors transform transition-transform active:scale-98 hover:bg-surface-container-high" href="#">
+<span class="material-symbols-outlined" data-icon="monitor_heart">monitor_heart</span>
+<span class="font-sans antialiased tracking-tight text-sm">Monitors</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-white transition-colors transform transition-transform active:scale-98 hover:bg-surface-container-high" href="#">
+<span class="material-symbols-outlined" data-icon="notifications_active">notifications_active</span>
+<span class="font-sans antialiased tracking-tight text-sm">Alerts</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:text-white transition-colors transform transition-transform active:scale-98 hover:bg-surface-container-high" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-sans antialiased tracking-tight text-sm">Settings</span>
+</a>
+</nav>
+<div class="px-6 mt-auto">
+<div class="flex items-center gap-3 p-3 rounded-lg bg-surface-container-high/50">
+<img alt="WebPulse System Admin" class="w-8 h-8 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8PB28TU3gA0wc-8dHlHlxqnpwQR1FkXArBtj1svauGCmTH71830V5YUMZFK9gicmht_fqhfWpQ1qgwmL__4U0lQKjlbh3wWq0ND5myuZE6PTqqO3Nw3q4WhWGkiXp6iSLZE1I-eNpdvuWXmy3yvAJaTZxuwNK8ryiDzQCVQkistsdsDGOiqFX7hvaIlSLTgfwUtVPJPyqVYqXW4PFq52OTkugYXeINhrSqhXuTuVhj-8fl4B1Zk-EES4Mvah7gR14xL64C51eqAoR"/>
+<div class="overflow-hidden">
+<p class="text-xs font-bold text-white truncate">Admin User</p>
+<p class="text-[10px] text-on-surface-variant truncate">admin@webpulse.io</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- TopNavBar Shell -->
+<header class="fixed top-0 right-0 left-64 h-16 border-b border-outline-variant bg-surface/80 backdrop-blur-md z-40 flex justify-between items-center px-8 w-full">
+<div class="flex items-center gap-md bg-surface-container-high/50 px-4 py-2 rounded-lg border border-outline-variant w-96">
+<span class="material-symbols-outlined text-on-surface-variant text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-xs text-white w-full placeholder-on-surface-variant uppercase tracking-wider font-medium" placeholder="Search monitors, endpoints, or statuses..." type="text"/>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-md border-r border-outline-variant pr-lg">
+<button class="text-on-surface-variant hover:text-emerald-500 transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-emerald-500 transition-colors">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+</div>
+<button class="bg-emerald-600 text-black px-6 py-2 rounded-sm font-sans font-bold text-xs uppercase tracking-wider hover:bg-emerald-500 active:opacity-90 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                Add Monitor
+            </button>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 mt-16 p-lg bg-background min-h-screen">
+<header class="mb-xl flex justify-between items-end">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-background mb-xs">System Overview</h2>
+<p class="text-on-surface-variant font-body-md text-body-md">Real-time status of 12 monitored services across 4 regions.</p>
+</div>
+<div class="flex gap-md">
+<div class="bg-surface-container px-md py-sm rounded border border-outline-variant flex flex-col">
+<span class="font-label-mono text-label-mono text-on-surface-variant mb-xs">GLOBAL UPTIME</span>
+<span class="font-headline-md text-headline-md text-secondary">99.98%</span>
+</div>
+<div class="bg-surface-container px-md py-sm rounded border border-outline-variant flex flex-col">
+<span class="font-label-mono text-label-mono text-on-surface-variant mb-xs">ACTIVE INCIDENTS</span>
+<span class="font-headline-md text-headline-md text-error">0</span>
+</div>
+</div>
+</header>
+<!-- Bento Grid of Monitors -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-lg">
+<!-- Card 1: Online -->
+<div class="bg-surface border border-outline-variant p-lg rounded-lg hover:border-emerald-500/30 transition-all group cursor-pointer">
+<div class="flex justify-between items-start mb-md">
+<div class="bg-surface-container-high w-10 h-10 flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-emerald-500" data-icon="public">public</span>
+</div>
+<div class="flex items-center gap-2 bg-secondary/10 px-2 py-1 rounded">
+<span class="w-2 h-2 rounded-full bg-secondary status-pulse-green"></span>
+<span class="text-[10px] font-bold text-secondary uppercase">Online</span>
+</div>
+</div>
+<div class="mb-lg">
+<h3 class="font-headline-md text-headline-md text-white truncate">Cloud API Gateway</h3>
+<p class="text-on-surface-variant text-xs font-label-mono">api.webpulse.io/v2</p>
+</div>
+<div class="space-y-md">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label-mono text-label-mono text-on-surface-variant mb-xs">UPTIME (30D)</p>
+<p class="font-headline-md text-headline-md text-white">99.9%</p>
+</div>
+<div class="text-right">
+<p class="font-label-mono text-label-mono text-on-surface-variant mb-xs">LATENCY</p>
+<p class="font-label-mono text-label-mono text-secondary">42ms</p>
+</div>
+</div>
+<!-- Sparkline SVG -->
+<div class="h-12 w-full bg-surface-container-lowest/50 rounded overflow-hidden">
+<svg class="w-full h-full" viewbox="0 0 200 40">
+<defs>
+<lineargradient id="grad1" x1="0%" x2="0%" y1="0%" y2="100%">
+<stop offset="0%" style="stop-color:rgba(64, 229, 108, 0.2);stop-opacity:1"></stop>
+<stop offset="100%" style="stop-color:rgba(64, 229, 108, 0);stop-opacity:0"></stop>
+</lineargradient>
+</defs>
+<path d="M0,35 L20,32 L40,34 L60,20 L80,25 L100,22 L120,30 L140,28 L160,35 L180,30 L200,32 L200,40 L0,40 Z" fill="url(#grad1)"></path>
+<path d="M0,35 L20,32 L40,34 L60,20 L80,25 L100,22 L120,30 L140,28 L160,35 L180,30 L200,32" fill="none" stroke="#40e56c" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Card 2: Online -->
+<div class="bg-surface border border-outline-variant p-lg rounded-lg hover:border-emerald-500/30 transition-all group cursor-pointer">
+<div class="flex justify-between items-start mb-md">
+<div class="bg-surface-container-high w-10 h-10 flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-emerald-500" data-icon="storage">storage</span>
+</div>
+<div class="flex items-center gap-2 bg-secondary/10 px-2 py-1 rounded">
+<span class="w-2 h-2 rounded-full bg-secondary status-pulse-green"></span>
+<span class="text-[10px] font-bold text-secondary uppercase">Online</span>
+</div>
+</div>
+<div class="mb-lg">
+<h3 class="font-headline-md text-headline-md text-white truncate">Primary Auth DB</h3>
+<p class="text-on-surface-variant text-xs font-label-mono">db-primary-us-east.aws</p>
+</div>
+<div class="space-y-md">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label-mono text-label-mono text-on-surface-variant mb-xs">UPTIME (30D)</p>
+<p class="font-headline-md text-headline-md text-white">100%</p>
+</div>
+<div class="text-right">
+<p class="font-label-mono text-label-mono text-on-surface-variant mb-xs">LATENCY</p>
+<p class="font-label-mono text-label-mono text-secondary">8ms</p>
+</div>
+</div>
+<div class="h-12 w-full bg-surface-container-lowest/50 rounded overflow-hidden">
+<svg class="w-full h-full" viewbox="0 0 200 40">
+<path d="M0,20 L20,20 L40,18 L60,20 L80,20 L100,19 L120,20 L140,20 L160,21 L180,20 L200,20 L200,40 L0,40 Z" fill="rgba(64, 229, 108, 0.1)"></path>
+<path d="M0,20 L20,20 L40,18 L60,20 L80,20 L100,19 L120,20 L140,20 L160,21 L180,20 L200,20" fill="none" stroke="#40e56c" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Card 3: Offline -->
+<div class="bg-surface border border-error/20 p-lg rounded-lg hover:border-error/50 transition-all group cursor-pointer relative overflow-hidden">
+<div class="absolute top-0 right-0 p-1 bg-error text-black font-bold text-[8px] uppercase tracking-tighter px-2">Incident Detected</div>
+<div class="flex justify-between items-start mb-md">
+<div class="bg-surface-container-high w-10 h-10 flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-error" data-icon="webhook">webhook</span>
+</div>
+<div class="flex items-center gap-2 bg-error/10 px-2 py-1 rounded">
+<span class="w-2 h-2 rounded-full bg-error status-pulse-red"></span>
+<span class="text-[10px] font-bold text-error uppercase">Offline</span>
+</div>
+</div>
+<div class="mb-lg">
+<h3 class="font-headline-md text-headline-md text-white truncate">Legacy Payment Hook</h3>
+<p class="text-on-surface-variant text-xs font-label-mono">hooks.stripe.service</p>
+</div>
+<div class="space-y-md">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label-mono text-label-mono text-on-surface-variant mb-xs">UPTIME (30D)</p>
+<p class="font-headline-md text-headline-md text-error">94.2%</p>
+</div>
+<div class="text-right">
+<p class="font-label-mono text-label-mono text-on-surface-variant mb-xs">LATENCY</p>
+<p class="font-label-mono text-label-mono text-error">TIMEOUT</p>
+</div>
+</div>
+<div class="h-12 w-full bg-surface-container-lowest/50 rounded overflow-hidden">
+<svg class="w-full h-full" viewbox="0 0 200 40">
+<path d="M0,10 L20,12 L40,8 L60,40 L200,40 L0,40 Z" fill="rgba(255, 180, 171, 0.1)"></path>
+<path d="M0,10 L20,12 L40,8 L60,40" fill="none" stroke="#ffb4ab" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Card 4: Online -->
+<div class="bg-surface border border-outline-variant p-lg rounded-lg hover:border-emerald-500/30 transition-all group cursor-pointer">
+<div class="flex justify-between items-start mb-md">
+<div class="bg-surface-container-high w-10 h-10 flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-emerald-500" data-icon="cloud_queue">cloud_queue</span>
+</div>
+<div class="flex items-center gap-2 bg-secondary/10 px-2 py-1 rounded">
+<span class="w-2 h-2 rounded-full bg-secondary status-pulse-green"></span>
+<span class="text-[10px] font-bold text-secondary uppercase">Online</span>
+</div>
+</div>
+<div class="mb-lg">
+<h3 class="font-headline-md text-headline-md text-white truncate">Asset CDN</h3>
+<p class="text-on-surface-variant text-xs font-label-mono">cdn.webpulse-assets.com</p>
+</div>
+<div class="space-y-md">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label-mono text-label-mono text-on-surface-variant mb-xs">UPTIME (30D)</p>
+<p class="font-headline-md text-headline-md text-white">99.99%</p>
+</div>
+<div class="text-right">
+<p class="font-label-mono text-label-mono text-on-surface-variant mb-xs">LATENCY</p>
+<p class="font-label-mono text-label-mono text-secondary">12ms</p>
+</div>
+</div>
+<div class="h-12 w-full bg-surface-container-lowest/50 rounded overflow-hidden">
+<svg class="w-full h-full" viewbox="0 0 200 40">
+<path d="M0,25 L20,24 L40,26 L60,22 L80,25 L100,24 L120,26 L140,25 L160,25 L180,24 L200,25 L200,40 L0,40 Z" fill="rgba(64, 229, 108, 0.1)"></path>
+<path d="M0,25 L20,24 L40,26 L60,22 L80,25 L100,24 L120,26 L140,25 L160,25 L180,24 L200,25" fill="none" stroke="#40e56c" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Card 5: Online -->
+<div class="bg-surface border border-outline-variant p-lg rounded-lg hover:border-emerald-500/30 transition-all group cursor-pointer">
+<div class="flex justify-between items-start mb-md">
+<div class="bg-surface-container-high w-10 h-10 flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-emerald-500" data-icon="search">search</span>
+</div>
+<div class="flex items-center gap-2 bg-secondary/10 px-2 py-1 rounded">
+<span class="w-2 h-2 rounded-full bg-secondary status-pulse-green"></span>
+<span class="text-[10px] font-bold text-secondary uppercase">Online</span>
+</div>
+</div>
+<div class="mb-lg">
+<h3 class="font-headline-md text-headline-md text-white truncate">Elastic Search Cluster</h3>
+<p class="text-on-surface-variant text-xs font-label-mono">es-01.internal.vpc</p>
+</div>
+<div class="space-y-md">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label-mono text-label-mono text-on-surface-variant mb-xs">UPTIME (30D)</p>
+<p class="font-headline-md text-headline-md text-white">99.8%</p>
+</div>
+<div class="text-right">
+<p class="font-label-mono text-label-mono text-on-surface-variant mb-xs">LATENCY</p>
+<p class="font-label-mono text-label-mono text-secondary">55ms</p>
+</div>
+</div>
+<div class="h-12 w-full bg-surface-container-lowest/50 rounded overflow-hidden">
+<svg class="w-full h-full" viewbox="0 0 200 40">
+<path d="M0,15 L20,18 L40,14 L60,30 L80,20 L100,25 L120,15 L140,18 L160,14 L180,30 L200,20 L200,40 L0,40 Z" fill="rgba(64, 229, 108, 0.1)"></path>
+<path d="M0,15 L20,18 L40,14 L60,30 L80,20 L100,25 L120,15 L140,18 L160,14 L180,30 L200,20" fill="none" stroke="#40e56c" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Card 6: Online -->
+<div class="bg-surface border border-outline-variant p-lg rounded-lg hover:border-emerald-500/30 transition-all group cursor-pointer">
+<div class="flex justify-between items-start mb-md">
+<div class="bg-surface-container-high w-10 h-10 flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-emerald-500" data-icon="language">language</span>
+</div>
+<div class="flex items-center gap-2 bg-secondary/10 px-2 py-1 rounded">
+<span class="w-2 h-2 rounded-full bg-secondary status-pulse-green"></span>
+<span class="text-[10px] font-bold text-secondary uppercase">Online</span>
+</div>
+</div>
+<div class="mb-lg">
+<h3 class="font-headline-md text-headline-md text-white truncate">Public Homepage</h3>
+<p class="text-on-surface-variant text-xs font-label-mono">webpulse.io</p>
+</div>
+<div class="space-y-md">
+<div class="flex justify-between items-end">
+<div>
+<p class="font-label-mono text-label-mono text-on-surface-variant mb-xs">UPTIME (30D)</p>
+<p class="font-headline-md text-headline-md text-white">99.9%</p>
+</div>
+<div class="text-right">
+<p class="font-label-mono text-label-mono text-on-surface-variant mb-xs">LATENCY</p>
+<p class="font-label-mono text-label-mono text-secondary">110ms</p>
+</div>
+</div>
+<div class="h-12 w-full bg-surface-container-lowest/50 rounded overflow-hidden">
+<svg class="w-full h-full" viewbox="0 0 200 40">
+<path d="M0,30 L20,32 L40,28 L60,35 L80,32 L100,30 L120,32 L140,28 L160,35 L180,32 L200,30 L200,40 L0,40 Z" fill="rgba(64, 229, 108, 0.1)"></path>
+<path d="M0,30 L20,32 L40,28 L60,35 L80,32 L100,30 L120,32 L140,28 L160,35 L180,32 L200,30" fill="none" stroke="#40e56c" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Empty Placeholder Card -->
+<div class="bg-surface/30 border-2 border-dashed border-outline-variant p-lg rounded-lg flex flex-col items-center justify-center text-center hover:border-outline transition-all cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-surface-container-high flex items-center justify-center mb-md group-hover:bg-outline-variant transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="add_circle">add_circle</span>
+</div>
+<p class="text-white font-bold text-sm mb-xs">New Target</p>
+<p class="text-on-surface-variant text-xs px-lg">Connect a new service or website to monitor.</p>
+</div>
+</div>
+<!-- System Log Section -->
+<section class="mt-xl">
+<div class="flex justify-between items-center mb-lg">
+<h3 class="font-headline-lg text-headline-lg text-white">Live Monitoring Logs</h3>
+<button class="text-xs font-bold text-on-surface-variant hover:text-white transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="history">history</span>
+                    View Full History
+                </button>
+</div>
+<div class="bg-surface border border-outline-variant rounded-lg overflow-hidden">
+<table class="w-full text-left">
+<thead class="bg-surface-container-lowest border-b-2 border-outline-variant">
+<tr>
+<th class="px-lg py-md font-label-mono text-label-mono text-on-surface-variant">TIMESTAMP</th>
+<th class="px-lg py-md font-label-mono text-label-mono text-on-surface-variant">MONITOR</th>
+<th class="px-lg py-md font-label-mono text-label-mono text-on-surface-variant">EVENT</th>
+<th class="px-lg py-md font-label-mono text-label-mono text-on-surface-variant">STATUS</th>
+<th class="px-lg py-md font-label-mono text-label-mono text-on-surface-variant text-right">RESPONSE</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="px-lg py-md font-label-mono text-label-mono text-on-surface-variant">14:23:45.002</td>
+<td class="px-lg py-md text-white font-medium">Cloud API Gateway</td>
+<td class="px-lg py-md text-on-surface-variant text-xs uppercase">Health Check OK</td>
+<td class="px-lg py-md"><span class="bg-secondary/10 text-secondary text-[10px] px-2 py-0.5 rounded font-bold">200 OK</span></td>
+<td class="px-lg py-md text-right font-label-mono text-label-mono text-on-surface-variant">42ms</td>
+</tr>
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="px-lg py-md font-label-mono text-label-mono text-on-surface-variant">14:22:10.891</td>
+<td class="px-lg py-md text-white font-medium">Primary Auth DB</td>
+<td class="px-lg py-md text-on-surface-variant text-xs uppercase">Heartbeat Pulse</td>
+<td class="px-lg py-md"><span class="bg-secondary/10 text-secondary text-[10px] px-2 py-0.5 rounded font-bold">ACTIVE</span></td>
+<td class="px-lg py-md text-right font-label-mono text-label-mono text-on-surface-variant">8ms</td>
+</tr>
+<tr class="hover:bg-surface-container-high/50 transition-colors bg-error/5">
+<td class="px-lg py-md font-label-mono text-label-mono text-error">14:20:00.000</td>
+<td class="px-lg py-md text-white font-medium">Legacy Payment Hook</td>
+<td class="px-lg py-md text-error text-xs uppercase font-bold">Connection Refused</td>
+<td class="px-lg py-md"><span class="bg-error/20 text-error text-[10px] px-2 py-0.5 rounded font-bold">504 TIMEOUT</span></td>
+<td class="px-lg py-md text-right font-label-mono text-label-mono text-error">ERR</td>
+</tr>
+<tr class="hover:bg-surface-container-high/50 transition-colors">
+<td class="px-lg py-md font-label-mono text-label-mono text-on-surface-variant">14:18:32.441</td>
+<td class="px-lg py-md text-white font-medium">Public Homepage</td>
+<td class="px-lg py-md text-on-surface-variant text-xs uppercase">Visual Regression Check</td>
+<td class="px-lg py-md"><span class="bg-secondary/10 text-secondary text-[10px] px-2 py-0.5 rounded font-bold">PASS</span></td>
+<td class="px-lg py-md text-right font-label-mono text-label-mono text-on-surface-variant">110ms</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</main>
+<!-- Floating Action for Mobile / Quick Settings (Suppressed per logic but kept for functionality where appropriate) -->
+<div class="fixed bottom-lg right-lg lg:hidden">
+<button class="w-14 h-14 bg-emerald-600 rounded-full flex items-center justify-center text-black shadow-lg">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</body></html>

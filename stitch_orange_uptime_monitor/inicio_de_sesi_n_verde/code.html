@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&amp;family=Geist:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#71af97",
+                        "secondary-container": "#4b4b52",
+                        "error-container": "#93000a",
+                        "error": "#ffb4ab",
+                        "surface-container-lowest": "#0e0e10",
+                        "surface-tint": "#4edea3",
+                        "on-error": "#690005",
+                        "on-primary-fixed": "#002113",
+                        "surface-dim": "#131315",
+                        "secondary": "#c7c5ce",
+                        "primary-container": "#10b981",
+                        "on-primary-fixed-variant": "#005236",
+                        "inverse-on-surface": "#313032",
+                        "on-primary": "#003824",
+                        "tertiary-fixed-dim": "#95d3ba",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#e5e1e4",
+                        "on-surface": "#e5e1e4",
+                        "surface-container-low": "#1c1b1d",
+                        "outline-variant": "#3c4a42",
+                        "outline": "#86948a",
+                        "secondary-fixed-dim": "#c7c5ce",
+                        "secondary-fixed": "#e3e1ea",
+                        "on-tertiary-container": "#004231",
+                        "tertiary-fixed": "#b0f0d6",
+                        "on-primary-container": "#00422b",
+                        "inverse-surface": "#e5e1e4",
+                        "background": "#131315",
+                        "surface-container-highest": "#353437",
+                        "surface": "#131315",
+                        "tertiary": "#95d3ba",
+                        "on-secondary-fixed-variant": "#46464d",
+                        "surface-container": "#201f22",
+                        "primary-fixed": "#6ffbbe",
+                        "on-secondary-container": "#bcbbc3",
+                        "surface-container-high": "#2a2a2c",
+                        "surface-variant": "#353437",
+                        "on-surface-variant": "#bbcabf",
+                        "on-secondary": "#303037",
+                        "surface-bright": "#39393b",
+                        "on-tertiary-fixed": "#002117",
+                        "on-tertiary-fixed-variant": "#0b513d",
+                        "primary": "#4edea3",
+                        "inverse-primary": "#006c49",
+                        "primary-fixed-dim": "#4edea3",
+                        "on-tertiary": "#003829",
+                        "on-secondary-fixed": "#1b1b21"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "16px",
+                        "sm": "8px",
+                        "base": "4px",
+                        "xs": "4px",
+                        "margin": "24px",
+                        "xl": "48px",
+                        "md": "16px",
+                        "lg": "24px"
+                    },
+                    "fontFamily": {
+                        "label-mono": ["JetBrains Mono"],
+                        "body-lg": ["Geist"],
+                        "headline-lg": ["Geist"],
+                        "headline-md": ["Geist"],
+                        "body-md": ["Geist"],
+                        "headline-lg-mobile": ["Geist"]
+                    },
+                    "fontSize": {
+                        "label-mono": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "500"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "1.2", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0e0e10;
+        }
+        .glass-panel {
+            background: rgba(9, 9, 11, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid #27272a;
+        }
+        .emerald-glow:focus-within {
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
+            border-color: #10b981;
+        }
+    </style>
+</head>
+<body class="antialiased text-on-background min-h-screen flex flex-col">
+<main class="flex-grow flex items-center justify-center px-margin">
+<div class="max-w-[420px] w-full flex flex-col gap-xl">
+<header class="flex flex-col items-center text-center gap-sm">
+<div class="font-label-mono text-headline-md font-bold tracking-tighter text-primary">
+                    WEBPULSE
+                </div>
+<div class="flex flex-col gap-xs">
+<h1 class="font-headline-md text-headline-md text-on-surface">Welcome Back</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">System access required for telemetry monitoring.</p>
+</div>
+</header>
+<section class="glass-panel p-lg rounded-lg flex flex-col gap-lg">
+<form class="flex flex-col gap-md">
+<div class="flex flex-col gap-sm">
+<label class="font-label-mono text-label-mono text-on-surface-variant" for="email">IDENTIFIER (EMAIL)</label>
+<div class="relative emerald-glow transition-all duration-200 border border-outline-variant bg-surface-container-lowest rounded-DEFAULT overflow-hidden">
+<input class="w-full bg-transparent border-none focus:ring-0 px-md py-sm font-body-md text-on-surface placeholder:text-on-surface-variant/30" id="email" placeholder="name@domain.com" type="email"/>
+</div>
+</div>
+<div class="flex flex-col gap-sm">
+<div class="flex justify-between items-center">
+<label class="font-label-mono text-label-mono text-on-surface-variant" for="password">ACCESS KEY</label>
+<a class="font-label-mono text-[10px] text-primary hover:underline transition-all" href="#">RECOVER_KEY</a>
+</div>
+<div class="relative emerald-glow transition-all duration-200 border border-outline-variant bg-surface-container-lowest rounded-DEFAULT overflow-hidden">
+<input class="w-full bg-transparent border-none focus:ring-0 px-md py-sm font-body-md text-on-surface placeholder:text-on-surface-variant/30" id="password" placeholder="••••••••" type="password"/>
+</div>
+</div>
+<div class="flex items-center gap-sm mt-xs">
+<input class="w-4 h-4 rounded-xs border-outline-variant bg-surface-container-lowest text-primary focus:ring-primary focus:ring-offset-background" id="remember" type="checkbox"/>
+<label class="font-body-md text-body-md text-on-surface-variant cursor-pointer" for="remember">Keep session persistent</label>
+</div>
+<button class="w-full py-sm bg-primary-container text-on-primary-container font-label-mono text-label-mono font-bold rounded-DEFAULT hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-sm" type="submit">
+                        INITIALIZE_SESSION
+                        <span class="material-symbols-outlined text-[16px]">terminal</span>
+</button>
+</form>
+<div class="relative h-px bg-outline-variant w-full my-sm">
+<span class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-sm bg-[#09090b] font-label-mono text-[10px] text-on-surface-variant">EXTERNAL_AUTH</span>
+</div>
+<div class="grid grid-cols-2 gap-sm">
+<button class="flex items-center justify-center gap-sm py-sm border border-outline-variant rounded-DEFAULT font-label-mono text-label-mono text-on-surface hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[16px]">key</span>
+                        SSO
+                    </button>
+<button class="flex items-center justify-center gap-sm py-sm border border-outline-variant rounded-DEFAULT font-label-mono text-label-mono text-on-surface hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-[16px]">cloud</span>
+                        AZURE
+                    </button>
+</div>
+</section>
+<footer class="flex flex-col items-center gap-sm">
+<p class="font-body-md text-body-md text-on-surface-variant">New to the monitoring system?</p>
+<a class="font-label-mono text-label-mono text-primary font-bold hover:underline transition-all" href="#">REGISTER_SYSTEM_USER</a>
+</footer>
+</div>
+</main>
+<div class="fixed bottom-0 left-0 w-full p-margin flex justify-between items-end pointer-events-none opacity-20">
+<div class="font-label-mono text-[10px] text-on-surface-variant">
+            LATENCY: 14ms<br/>
+            VERSION: 4.2.0-STABLE
+        </div>
+<div class="font-label-mono text-[10px] text-on-surface-variant text-right">
+            ENCRYPTION: AES-256<br/>
+            STATUS: SECURE_CHANNEL
+        </div>
+</div>
+<footer class="w-full py-lg px-margin flex flex-col md:flex-row justify-between items-center gap-md border-t border-outline-variant bg-background">
+<div class="font-label-mono text-body-lg font-bold text-primary">WEBPULSE</div>
+<div class="font-body-md text-body-md text-on-surface-variant text-center md:text-left">
+            © 2024 WEBPULSE MONITORING SYSTEMS. ALL RIGHTS RESERVED.
+        </div>
+<div class="flex gap-md">
+<a class="font-label-mono text-label-mono text-on-surface-variant hover:text-on-surface transition-colors duration-200" href="#">Terms of Service</a>
+<a class="font-label-mono text-label-mono text-on-surface-variant hover:text-on-surface transition-colors duration-200" href="#">Security</a>
+</div>
+</footer>
+</body></html>

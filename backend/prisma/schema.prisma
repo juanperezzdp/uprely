@@ -1,0 +1,170 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Plan {
+  FREE
+  PRO
+}
+
+enum MonitorType {
+  HTTP
+  TCP
+  SSL
+  KEYWORD
+  HEARTBEAT
+}
+
+enum AlertContactType {
+  EMAIL
+  SMS
+  WEBHOOK
+}
+
+model User {
+  id             String   @id @default(uuid()) @db.Uuid
+  email          String   @unique
+  passwordHash   String   @map("password_hash")
+  plan           Plan     @default(FREE)
+  dodoCustomerId String?  @map("dodo_customer_id")
+  createdAt      DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt      DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+  monitors       Monitor[]
+  alertContacts  AlertContact[]
+  statusPages    StatusPage[]
+
+  @@index([email], map: "users_email_idx")
+  @@map("users")
+}
+
+model Monitor {
+  id                           String        @id @default(uuid()) @db.Uuid
+  userId                       String        @map("user_id") @db.Uuid
+  name                         String
+  url                          String?
+  type                         MonitorType
+  intervalSeconds              Int           @map("interval_seconds")
+  timeoutMs                    Int           @default(10000) @map("timeout_ms")
+  isActive                     Boolean       @default(true) @map("is_active")
+  keywordExpected              String?       @map("keyword_expected")
+  keywordMustExist             Boolean?      @map("keyword_must_exist")
+  consecutiveFailuresThreshold Int           @default(2) @map("consecutive_failures_threshold")
+  heartbeatToken               String?       @unique @map("heartbeat_token")
+  lastCheckedAt                DateTime?     @map("last_checked_at") @db.Timestamptz(6)
+  createdAt                    DateTime      @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt                    DateTime      @updatedAt @map("updated_at") @db.Timestamptz(6)
+  user                         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  checkResults                 CheckResult[]
+  heartbeatLogs                HeartbeatLog[]
+  incidents                    Incident[]
+  statusPageMonitors           StatusPageMonitor[]
+
+  @@index([userId], map: "monitors_user_id_idx")
+  @@index([isActive], map: "monitors_is_active_idx")
+  @@index([userId, isActive, type], map: "monitors_user_id_is_active_type_idx")
+  @@map("monitors")
+}
+
+model StatusPage {
+  id           String              @id @default(uuid()) @db.Uuid
+  userId       String              @map("user_id") @db.Uuid
+  slug         String              @unique
+  name         String
+  isPublic     Boolean             @default(true) @map("is_public")
+  description  String?
+  createdAt    DateTime            @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime            @updatedAt @map("updated_at") @db.Timestamptz(6)
+  user         User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pageMonitors StatusPageMonitor[]
+
+  @@index([userId], map: "status_pages_user_id_idx")
+  @@map("status_pages")
+}
+
+model StatusPageMonitor {
+  statusPageId String     @map("status_page_id") @db.Uuid
+  monitorId    String     @map("monitor_id") @db.Uuid
+  createdAt    DateTime   @default(now()) @map("created_at") @db.Timestamptz(6)
+  statusPage   StatusPage @relation(fields: [statusPageId], references: [id], onDelete: Cascade)
+  monitor      Monitor    @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  @@id([statusPageId, monitorId])
+  @@index([monitorId], map: "status_page_monitors_monitor_id_idx")
+  @@map("status_page_monitors")
+}
+
+model HeartbeatLog {
+  id         String   @id @default(uuid()) @db.Uuid
+  monitorId  String   @map("monitor_id") @db.Uuid
+  receivedAt DateTime @map("received_at") @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  monitor    Monitor  @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  @@index([monitorId], map: "heartbeat_logs_monitor_id_idx")
+  @@index([receivedAt], map: "heartbeat_logs_received_at_idx")
+  @@index([monitorId, receivedAt], map: "heartbeat_logs_monitor_id_received_at_idx")
+  @@map("heartbeat_logs")
+}
+
+model CheckResult {
+  id          String    @id @default(uuid()) @db.Uuid
+  monitorId   String    @map("monitor_id") @db.Uuid
+  checkedAt   DateTime  @map("checked_at") @db.Timestamptz(6)
+  statusCode  Int?      @map("status_code")
+  latencyMs   Int?      @map("latency_ms")
+  isUp        Boolean   @map("is_up")
+  error       String?
+  keywordFound Boolean? @map("keyword_found")
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  monitor     Monitor   @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  @@index([monitorId], map: "check_results_monitor_id_idx")
+  @@index([checkedAt], map: "check_results_checked_at_idx")
+  @@index([isUp], map: "check_results_is_up_idx")
+  @@index([monitorId, checkedAt, isUp], map: "check_results_monitor_id_checked_at_is_up_idx")
+  @@map("check_results")
+}
+
+model Incident {
+  id          String    @id @default(uuid()) @db.Uuid
+  monitorId   String    @map("monitor_id") @db.Uuid
+  startedAt   DateTime  @map("started_at") @db.Timestamptz(6)
+  confirmedAt DateTime? @map("confirmed_at") @db.Timestamptz(6)
+  resolvedAt  DateTime? @map("resolved_at") @db.Timestamptz(6)
+  cause       String
+  createdAt   DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  monitor     Monitor   @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  @@index([monitorId], map: "incidents_monitor_id_idx")
+  @@index([startedAt], map: "incidents_started_at_idx")
+  @@index([monitorId, startedAt], map: "incidents_monitor_id_started_at_idx")
+  @@map("incidents")
+}
+
+model AlertContact {
+  id        String           @id @default(uuid()) @db.Uuid
+  userId    String           @map("user_id") @db.Uuid
+  type      AlertContactType
+  value     String
+  createdAt DateTime         @default(now()) @map("created_at") @db.Timestamptz(6)
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "alert_contacts_user_id_idx")
+  @@map("alert_contacts")
+}
+
+model BillingWebhookEvent {
+  id         String   @id @default(uuid()) @db.Uuid
+  webhookId  String   @unique @map("webhook_id")
+  eventType  String   @map("event_type")
+  payload    Json
+  processedAt DateTime @map("processed_at") @db.Timestamptz(6)
+  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([eventType], map: "billing_webhook_events_event_type_idx")
+  @@map("billing_webhook_events")
+}
