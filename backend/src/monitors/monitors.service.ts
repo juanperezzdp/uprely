@@ -13,11 +13,18 @@ import {
 import { randomBytes } from 'node:crypto';
 import type { AuthenticatedUser } from '../auth/interfaces/authenticated-user.interface';
 import { HeartbeatService } from '../heartbeat/heartbeat.service';
+import { BullQueueService } from '../queue/bull-queue.service';
 import { PLAN_LIMITS } from '../users/constants/plan-limits';
+import {
+  getMonitorCheckQueueName,
+  MONITOR_CHECK_JOB_NAME,
+  type MonitorCheckJobPayload,
+} from '../modules/scheduler/scheduler.types';
 import type { CreateMonitorDto } from './dto/create-monitor.dto';
 import type { ListMonitorsQueryDto } from './dto/list-monitors-query.dto';
 import type { UpdateMonitorDto } from './dto/update-monitor.dto';
 import { MonitorsRepository } from './repositories/monitors.repository';
+import { readFileSync } from 'node:fs';
 
 export interface PaginatedMeta {
   page: number;
@@ -61,6 +68,7 @@ export class MonitorsService {
   constructor(
     private readonly monitorsRepository: MonitorsRepository,
     private readonly heartbeatService: HeartbeatService,
+    private readonly bullQueueService: BullQueueService,
   ) {}
 
   async listMonitors(
@@ -134,6 +142,11 @@ export class MonitorsService {
 
     if (monitor.type === MonitorType.HEARTBEAT) {
       await this.heartbeatService.syncMonitorTimeout(monitor);
+      return monitor;
+    }
+
+    if (monitor.isActive) {
+      await this.enqueueImmediateCheck(monitor, 'initial');
     }
 
     return monitor;
@@ -181,6 +194,44 @@ export class MonitorsService {
     }
 
     return updatedMonitor;
+  }
+
+  async restartMonitor(
+    user: AuthenticatedUser,
+    monitorId: string,
+  ): Promise<{ message: string }> {
+    const monitor = await this.getOwnedMonitorOrThrow(user.id, monitorId);
+    // #region debug-point A:restart-entry
+    reportRestart500Debug({
+      hypothesisId: 'A',
+      location: 'monitors.service.ts:restartMonitor',
+      msg: '[DEBUG] restartMonitor entered',
+      data: {
+        monitorId,
+        userId: user.id,
+        monitorType: monitor.type,
+        isActive: monitor.isActive,
+      },
+    });
+    // #endregion
+
+    if (monitor.type === MonitorType.HEARTBEAT) {
+      throw new BadRequestException(
+        'Heartbeat monitors cannot be restarted manually',
+      );
+    }
+
+    if (!monitor.isActive) {
+      throw new BadRequestException(
+        'Inactive monitors cannot be restarted. Activate the monitor first.',
+      );
+    }
+
+    await this.enqueueImmediateCheck(monitor, 'restart');
+
+    return {
+      message: 'Monitor restart queued successfully',
+    };
   }
 
   async deleteMonitor(
@@ -497,4 +548,128 @@ export class MonitorsService {
   private generateHeartbeatToken(): string {
     return randomBytes(24).toString('hex');
   }
+
+  private async enqueueImmediateCheck(
+    monitor: Monitor,
+    reason: 'initial' | 'restart',
+  ): Promise<void> {
+    if (monitor.type === MonitorType.HEARTBEAT) {
+      return;
+    }
+
+    const queueName = getMonitorCheckQueueName(monitor.type);
+    // #region debug-point B:queue-selection
+    reportRestart500Debug({
+      hypothesisId: 'B',
+      location: 'monitors.service.ts:enqueueImmediateCheck',
+      msg: '[DEBUG] enqueueImmediateCheck preparing queue',
+      data: {
+        monitorId: monitor.id,
+        monitorType: monitor.type,
+        reason,
+        queueName,
+      },
+    });
+    // #endregion
+    const queue = this.bullQueueService.getQueue<MonitorCheckJobPayload>(
+      queueName,
+    );
+    const jobId =
+      reason === 'initial'
+        ? `monitor-check-initial-${monitor.id}`
+        : `monitor-check-restart-${monitor.id}-${Date.now()}`;
+
+    try {
+      // #region debug-point C:queue-add-start
+      reportRestart500Debug({
+        hypothesisId: 'C',
+        location: 'monitors.service.ts:enqueueImmediateCheck',
+        msg: '[DEBUG] queue.add starting',
+        data: {
+          monitorId: monitor.id,
+          queueName,
+          jobId,
+        },
+      });
+      // #endregion
+      await queue.add(
+        MONITOR_CHECK_JOB_NAME,
+        {
+          monitorId: monitor.id,
+        },
+        {
+          jobId,
+          attempts: 3,
+          backoff: {
+            type: 'exponential',
+            delay: 5000,
+          },
+          removeOnComplete: 100,
+          removeOnFail: 100,
+        },
+      );
+      // #region debug-point D:queue-add-success
+      reportRestart500Debug({
+        hypothesisId: 'D',
+        location: 'monitors.service.ts:enqueueImmediateCheck',
+        msg: '[DEBUG] queue.add completed',
+        data: {
+          monitorId: monitor.id,
+          queueName,
+          jobId,
+        },
+      });
+      // #endregion
+    } catch (error: unknown) {
+      // #region debug-point E:queue-add-failed
+      reportRestart500Debug({
+        hypothesisId: 'E',
+        location: 'monitors.service.ts:enqueueImmediateCheck',
+        msg: '[DEBUG] queue.add failed',
+        data: {
+          monitorId: monitor.id,
+          queueName,
+          jobId,
+          errorMessage: error instanceof Error ? error.message : 'Unknown error',
+          errorStack: error instanceof Error ? error.stack ?? null : null,
+        },
+      });
+      // #endregion
+      throw error;
+    }
+  }
+}
+
+function reportRestart500Debug(input: {
+  hypothesisId: 'A' | 'B' | 'C' | 'D' | 'E'
+  location: string
+  msg: string
+  data: Record<string, unknown>
+}): void {
+  let debugServerUrl = 'http://127.0.0.1:7777/event';
+  let sessionId = 'restart-500-error';
+
+  try {
+    const envFile = readFileSync('.dbg/restart-500-error.env', 'utf8');
+    debugServerUrl =
+      envFile.match(/DEBUG_SERVER_URL=(.+)/)?.[1]?.trim() ?? debugServerUrl;
+    sessionId =
+      envFile.match(/DEBUG_SESSION_ID=(.+)/)?.[1]?.trim() ?? sessionId;
+  } catch {}
+
+  void fetch(debugServerUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      sessionId,
+      runId: 'pre-fix',
+      hypothesisId: input.hypothesisId,
+      location: input.location,
+      msg: input.msg,
+      data: input.data,
+      ts: Date.now(),
+    }),
+  }).catch(() => undefined);
 }

@@ -1,11 +1,11 @@
-import { Injectable, OnModuleDestroy } from '@nestjs/common';
+import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 import type { RedisOptions } from 'ioredis';
 import type { EnvironmentVariables } from '../config/env.schema';
 
 @Injectable()
-export class RedisService implements OnModuleDestroy {
+export class RedisService implements OnModuleInit, OnModuleDestroy {
   private readonly client: Redis;
   private readonly connectionOptions: RedisOptions;
 
@@ -43,18 +43,28 @@ export class RedisService implements OnModuleDestroy {
     return this.client;
   }
 
-  getBullConnection(): RedisOptions {
-    return {
-      ...this.connectionOptions,
-    };
-  }
-
-  async ping(): Promise<string> {
+  async getConnectedClient(): Promise<Redis> {
     if (this.client.status === 'wait') {
       await this.client.connect();
     }
 
-    return this.client.ping();
+    return this.client;
+  }
+
+  getBullConnection(): RedisOptions {
+    return {
+      ...this.connectionOptions,
+      lazyConnect: false,
+      enableOfflineQueue: true,
+    };
+  }
+
+  async onModuleInit(): Promise<void> {
+    return Promise.resolve();
+  }
+
+  async ping(): Promise<string> {
+    return (await this.getConnectedClient()).ping();
   }
 
   async onModuleDestroy(): Promise<void> {

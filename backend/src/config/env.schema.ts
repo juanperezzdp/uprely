@@ -11,6 +11,56 @@ export const envSchema = z.object({
   REDIS_PORT: z.coerce.number().int().positive().default(6379),
   REDIS_DB: z.coerce.number().int().nonnegative().default(0),
   REDIS_PASSWORD: z.string().default(''),
+  SCHEDULER_POLL_INTERVAL_MS: z.coerce.number().int().positive().default(30000),
+  SCHEDULER_LOCK_TTL_MS: z.coerce.number().int().positive().default(60000),
+  WORKER_CONCURRENCY: z.coerce.number().int().positive().default(5),
+  WORKER_CONCURRENCY_HTTP: z.coerce.number().int().positive().optional(),
+  WORKER_CONCURRENCY_TCP: z.coerce.number().int().positive().optional(),
+  WORKER_CONCURRENCY_SSL: z.coerce.number().int().positive().optional(),
+  WORKER_CONCURRENCY_KEYWORD: z.coerce.number().int().positive().optional(),
+  WORKER_CONCURRENCY_ALERTS: z.coerce.number().int().positive().optional(),
+  WORKER_CONCURRENCY_HEARTBEAT_TIMEOUT: z.coerce
+    .number()
+    .int()
+    .positive()
+    .optional(),
+  WORKER_HTTP_CONNECTIONS_PER_HOST: z.coerce.number().int().positive().default(32),
+  WORKER_HTTP_PIPELINING: z.coerce.number().int().positive().default(1),
+  WORKER_HTTP_KEEP_ALIVE_TIMEOUT_MS: z.coerce
+    .number()
+    .int()
+    .positive()
+    .default(10000),
+  WORKER_HTTP_KEEP_ALIVE_MAX_TIMEOUT_MS: z.coerce
+    .number()
+    .int()
+    .positive()
+    .default(60000),
+  WORKER_METRICS_INTERVAL_MS: z.coerce.number().int().positive().default(30000),
+  CHECK_RESULTS_RETENTION_DAYS: z.coerce.number().int().positive().default(30),
+  CHECK_RESULTS_CLEANUP_INTERVAL_MS: z.coerce
+    .number()
+    .int()
+    .positive()
+    .default(3600000),
+  CHECK_RESULTS_CLEANUP_BATCH_SIZE: z.coerce.number().int().positive().default(5000),
+  ENABLE_DAILY_AGGREGATION: z.coerce.boolean().default(true),
+  DELETE_AFTER_AGGREGATION: z.coerce.boolean().default(true),
+  DAILY_AGGREGATION_HOUR: z.coerce.number().int().min(0).max(23).default(0),
+  DAILY_AGGREGATION_MINUTE: z.coerce.number().int().min(0).max(59).default(5),
+  SUMMARY_RETENTION_DAYS: z.coerce.number().int().positive().default(365),
+  ENABLE_WEEKLY_AGGREGATION: z.coerce.boolean().default(true),
+  DELETE_DAILY_AFTER_WEEKLY_AGGREGATION: z.coerce.boolean().default(true),
+  WEEKLY_AGGREGATION_HOUR: z.coerce.number().int().min(0).max(23).default(0),
+  WEEKLY_AGGREGATION_MINUTE: z.coerce.number().int().min(0).max(59).default(10),
+  ENABLE_MONTHLY_AGGREGATION: z.coerce.boolean().default(true),
+  DELETE_WEEKLY_AFTER_MONTHLY_AGGREGATION: z.coerce.boolean().default(true),
+  MONTHLY_AGGREGATION_HOUR: z.coerce.number().int().min(0).max(23).default(0),
+  MONTHLY_AGGREGATION_MINUTE: z.coerce.number().int().min(0).max(59).default(15),
+  ENABLE_YEARLY_AGGREGATION: z.coerce.boolean().default(true),
+  DELETE_MONTHLY_AFTER_YEARLY_AGGREGATION: z.coerce.boolean().default(true),
+  YEARLY_AGGREGATION_HOUR: z.coerce.number().int().min(0).max(23).default(0),
+  YEARLY_AGGREGATION_MINUTE: z.coerce.number().int().min(0).max(59).default(20),
   CORS_ORIGINS: z.string().default('http://localhost:5173'),
   LOG_LEVEL: z
     .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace', 'silent'])

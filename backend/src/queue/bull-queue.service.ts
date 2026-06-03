@@ -10,9 +10,9 @@ export class BullQueueService implements OnModuleDestroy {
 
   constructor(private readonly redisService: RedisService) {}
 
-  getQueue(name: BullQueueName): Queue {
-    this.ensureRegistered(name);
-    const queue = this.queues.get(name);
+  getQueue<T = unknown>(name: BullQueueName): Queue<T> {
+    this.ensureQueueRegistered(name);
+    const queue = this.queues.get(name) as Queue<T> | undefined;
 
     if (!queue) {
       throw new Error(`Queue "${name}" is not available`);
@@ -22,7 +22,8 @@ export class BullQueueService implements OnModuleDestroy {
   }
 
   getQueueEvents(name: BullQueueName): QueueEvents {
-    this.ensureRegistered(name);
+    this.ensureQueueRegistered(name);
+    this.ensureQueueEventsRegistered(name);
     const events = this.queueEvents.get(name);
 
     if (!events) {
@@ -32,7 +33,7 @@ export class BullQueueService implements OnModuleDestroy {
     return events;
   }
 
-  private ensureRegistered(name: BullQueueName): void {
+  private ensureQueueRegistered(name: BullQueueName): void {
     if (!BULL_QUEUE_NAMES.includes(name)) {
       throw new Error(`Queue "${name}" is not registered`);
     }
@@ -45,7 +46,9 @@ export class BullQueueService implements OnModuleDestroy {
         }),
       );
     }
+  }
 
+  private ensureQueueEventsRegistered(name: BullQueueName): void {
     if (!this.queueEvents.has(name)) {
       this.queueEvents.set(
         name,

@@ -1,10 +1,10 @@
 import process from 'node:process';
 import { NestFactory } from '@nestjs/core';
 import { Logger } from 'nestjs-pino';
-import { SchedulerAppModule } from './scheduler.app.module';
+import { SummaryWorkerAppModule } from './summary-worker.app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.createApplicationContext(SchedulerAppModule, {
+  const app = await NestFactory.createApplicationContext(SummaryWorkerAppModule, {
     bufferLogs: true,
   });
   const logger = app.get(Logger);
@@ -12,10 +12,10 @@ async function bootstrap() {
   app.useLogger(logger);
   app.enableShutdownHooks();
 
-  logger.log('Scheduler process ready');
+  logger.log('Summary worker process ready');
 
   const shutdown = async (signal: string) => {
-    logger.log(`Scheduler process stopping (${signal})`);
+    logger.log(`Summary worker process stopping (${signal})`);
     await app.close();
     process.exit(0);
   };
@@ -30,10 +30,10 @@ async function bootstrap() {
 }
 
 void bootstrap().catch((error: unknown) => {
-  const message = error instanceof Error ? error.message : 'Unknown scheduler error';
+  const message = error instanceof Error ? error.message : 'Unknown summary worker error';
   process.stderr.write(
     `${JSON.stringify({
-      service: 'scheduler',
+      service: 'summary-worker',
       status: 'failed',
       message,
     })}\n`,

@@ -93,6 +93,21 @@ export class MonitorsController {
     return this.monitorsService.updateMonitor(user, id, updateMonitorDto);
   }
 
+  @Post(':id/restart')
+  @HttpCode(HttpStatus.ACCEPTED)
+  @ApiOkResponse({
+    description: 'Queue an immediate check for the monitor',
+  })
+  @ApiOperation({
+    summary: 'Restart a monitor by queuing an immediate check',
+  })
+  restart(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ) {
+    return this.monitorsService.restartMonitor(user, id);
+  }
+
   @Delete(':id')
   @ApiOkResponse({
     description: 'Delete a monitor',

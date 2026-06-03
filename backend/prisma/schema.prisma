@@ -62,6 +62,10 @@ model Monitor {
   heartbeatLogs                HeartbeatLog[]
   incidents                    Incident[]
   statusPageMonitors           StatusPageMonitor[]
+  dailySummaries               MonitorDailySummary[]
+  weeklySummaries              MonitorWeeklySummary[]
+  monthlySummaries             MonitorMonthlySummary[]
+  yearlySummaries              MonitorYearlySummary[]
 
   @@index([userId], map: "monitors_user_id_idx")
   @@index([isActive], map: "monitors_is_active_idx")
@@ -167,4 +171,141 @@ model BillingWebhookEvent {
 
   @@index([eventType], map: "billing_webhook_events_event_type_idx")
   @@map("billing_webhook_events")
+}
+
+model MonitorDailySummary {
+  id                   String   @id @default(uuid()) @db.Uuid
+  monitorId            String   @map("monitor_id") @db.Uuid
+  date                 DateTime @db.Date
+
+  totalChecks          Int      @map("total_checks")
+  upChecks             Int      @map("up_checks")
+  downChecks           Int      @map("down_checks")
+  uptimePercentage     Float    @map("uptime_percentage")
+
+  avgLatencyMs         Float?   @map("avg_latency_ms")
+  minLatencyMs         Int?     @map("min_latency_ms")
+  maxLatencyMs         Int?     @map("max_latency_ms")
+  p95LatencyMs         Int?     @map("p95_latency_ms")
+  p99LatencyMs         Int?     @map("p99_latency_ms")
+
+  incidentsCount       Int      @default(0) @map("incidents_count")
+  totalDowntimeMinutes Int      @default(0) @map("total_downtime_minutes")
+
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  monitor              Monitor  @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  @@unique([monitorId, date])
+  @@index([date])
+  @@index([monitorId])
+  @@map("monitor_daily_summaries")
+}
+
+model MonitorWeeklySummary {
+  id                   String   @id @default(uuid()) @db.Uuid
+  monitorId            String   @map("monitor_id") @db.Uuid
+  year                 Int
+  weekNumber           Int      @map("week_number")
+  weekStartDate        DateTime @map("week_start_date") @db.Date
+  weekEndDate          DateTime @map("week_end_date") @db.Date
+
+  totalChecks          Int      @map("total_checks")
+  upChecks             Int      @map("up_checks")
+  downChecks           Int      @map("down_checks")
+  uptimePercentage     Float    @map("uptime_percentage")
+
+  avgLatencyMs         Float?   @map("avg_latency_ms")
+  minLatencyMs         Int?     @map("min_latency_ms")
+  maxLatencyMs         Int?     @map("max_latency_ms")
+  p95LatencyMs         Int?     @map("p95_latency_ms")
+  p99LatencyMs         Int?     @map("p99_latency_ms")
+
+  incidentsCount       Int      @default(0) @map("incidents_count")
+  totalDowntimeMinutes Int      @default(0) @map("total_downtime_minutes")
+
+  daysWithData         Int      @default(0) @map("days_with_data")
+
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  monitor              Monitor  @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  @@unique([monitorId, year, weekNumber])
+  @@index([year, weekNumber])
+  @@index([monitorId])
+  @@index([weekStartDate])
+  @@map("monitor_weekly_summaries")
+}
+
+model MonitorMonthlySummary {
+  id                   String   @id @default(uuid()) @db.Uuid
+  monitorId            String   @map("monitor_id") @db.Uuid
+  year                 Int
+  month                Int
+  monthStartDate       DateTime @map("month_start_date") @db.Date
+  monthEndDate         DateTime @map("month_end_date") @db.Date
+
+  totalChecks          Int      @map("total_checks")
+  upChecks             Int      @map("up_checks")
+  downChecks           Int      @map("down_checks")
+  uptimePercentage     Float    @map("uptime_percentage")
+
+  avgLatencyMs         Float?   @map("avg_latency_ms")
+  minLatencyMs         Int?     @map("min_latency_ms")
+  maxLatencyMs         Int?     @map("max_latency_ms")
+  p95LatencyMs         Int?     @map("p95_latency_ms")
+  p99LatencyMs         Int?     @map("p99_latency_ms")
+
+  incidentsCount       Int      @default(0) @map("incidents_count")
+  totalDowntimeMinutes Int      @default(0) @map("total_downtime_minutes")
+
+  weeksWithData        Int      @default(0) @map("weeks_with_data")
+
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  monitor              Monitor  @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  @@unique([monitorId, year, month])
+  @@index([year, month])
+  @@index([monitorId])
+  @@index([monthStartDate])
+  @@map("monitor_monthly_summaries")
+}
+
+model MonitorYearlySummary {
+  id                   String   @id @default(uuid()) @db.Uuid
+  monitorId            String   @map("monitor_id") @db.Uuid
+  year                 Int
+  yearStartDate        DateTime @map("year_start_date") @db.Date
+  yearEndDate          DateTime @map("year_end_date") @db.Date
+
+  totalChecks          Int      @map("total_checks")
+  upChecks             Int      @map("up_checks")
+  downChecks           Int      @map("down_checks")
+  uptimePercentage     Float    @map("uptime_percentage")
+
+  avgLatencyMs         Float?   @map("avg_latency_ms")
+  minLatencyMs         Int?     @map("min_latency_ms")
+  maxLatencyMs         Int?     @map("max_latency_ms")
+  p95LatencyMs         Int?     @map("p95_latency_ms")
+  p99LatencyMs         Int?     @map("p99_latency_ms")
+
+  incidentsCount       Int      @default(0) @map("incidents_count")
+  totalDowntimeMinutes Int      @default(0) @map("total_downtime_minutes")
+
+  monthsWithData       Int      @default(0) @map("months_with_data")
+
+  createdAt            DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  monitor              Monitor  @relation(fields: [monitorId], references: [id], onDelete: Cascade)
+
+  @@unique([monitorId, year])
+  @@index([year])
+  @@index([monitorId])
+  @@index([yearStartDate])
+  @@map("monitor_yearly_summaries")
 }
